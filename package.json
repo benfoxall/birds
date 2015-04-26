@@ -1,0 +1,29 @@
+{
+  "name": "birds",
+  "version": "1.0.0",
+  "description": "Birdsong with webaudio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benfoxall/birds.git"
+  },
+  "keywords": [
+    "webaudio",
+    "birdsong",
+    "xeno-canto"
+  ],
+  "author": "Ben Foxall (benfoxall@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benfoxall/birds/issues"
+  },
+  "homepage": "https://github.com/benfoxall/birds",
+  "dependencies": {
+    "body-parser": "^1.12.3",
+    "express": "^4.12.3"
+  }
+}
