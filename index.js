@@ -1,12 +1,15 @@
 var request = require('request');
 var bodyParser = require('body-parser');
+var multipart = require('connect-multiparty');
 var express = require('express');
 var app = express();
+
 
 app.use(express.static('public'));
 
 app.post('/', 
   bodyParser.urlencoded({ extended: false }),
+  multipart(),
   function (req, res) {
 
   var keys = "lat_min lon_min lat_max lon_max".split(' ');
