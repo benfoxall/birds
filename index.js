@@ -23,6 +23,12 @@ app.post('/',
     .pipe(res);
 });
 
+// cors issues with webAudio
+app.get(/\/proxy\/(.*)/, function(req, res){
+  request('http://www.xeno-canto.org/' + req.params[0])
+    .pipe(res);
+});
+
 var server = app.listen(process.env.PORT || 3000, function () {
   var host = server.address().address;
   var port = server.address().port;
