@@ -26,6 +26,7 @@
     "body-parser": "^1.12.3",
     "connect-multiparty": "^1.2.5",
     "express": "^4.12.3",
+    "ioredis": "^1.2.0",
     "request": "^2.55.0"
   }
 }

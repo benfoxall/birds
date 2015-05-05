@@ -4,6 +4,11 @@ var multipart = require('connect-multiparty');
 var express = require('express');
 var app = express();
 
+var Redis = require('ioredis');
+var redis = new Redis(process.env.REDISTOGO_URL);
+
+// expire stuff after a week
+var week = 60*60*24*7;
 
 app.use(express.static('public'));
 
@@ -33,10 +38,62 @@ app.get(/\/proxy\/(.*)/, function(req, res){
 app.post('/start', 
   bodyParser.urlencoded({ extended: false }),
   multipart(),
-  function (req, res) {
+  function (req, res, next) {
+
     console.log(req.body);
-    res.send("TODO");
+
+    var birds = req.body.birds.split(/\r?\n/);
+    if(!birds.length) return next();
+
+    // get the next url
+    redis.incr('url_base', function (err, i) {
+
+      if(err) return next(err);
+
+      var key = (Math.random()).toString(36).slice(2);
+
+      // set all the data and redirect
+      // to manage page
+      redis
+        .multi()
+
+        .set('pub-key-' + i, key)
+        .sadd('birds-' + i, birds)
+
+        .expire('pub-key-' + i, week)
+        .expire('birds-' + i, week)
+
+        .exec(function(err){
+          if(err) return next(err);
+          var url = '/flock/' + i + '/' + key;
+          res.redirect(url);
+        })
+    });
   });
+
+app.get('/flock/:id/:key', flockData, function(req, res){
+
+  if(req.params.key !== req.key)
+    return res.status(403).send('Forbidden');
+
+  res.send("<h1>YEAH:</h1>" + req.birds.join(' <br> '));
+
+})
+
+
+function flockData(req, res, next){
+  var id = req.params.id;
+  redis
+    .multi()
+    .get('pub-key-' + id)
+    .smembers('birds-' + id)
+    .exec()
+    .then(function(results){
+      req.key   = results[0][1];
+      req.birds = results[1][1];
+      next();
+    }, next)
+}
 
 var server = app.listen(process.env.PORT || 3000, function () {
   var host = server.address().address;
