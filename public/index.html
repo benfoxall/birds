@@ -1,224 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>birds</title>
-  <style type="text/css">
-    body{font-family: sans-serif}
-    /*input{display: block}*/
-    #map {
-      height: 500px; 
-      width: 500px; 
-      margin-bottom: 30px;
-    }
-    [type=submit]{
-      display: block;
-      margin:3em 0;
-    }
-  </style>
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <meta charset="utf-8">
+  <title>Birds</title>
 
-   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-
+  <!-- http://furtive.co/ -->
+  <link rel="stylesheet" type="text/css" href="bower/furtive/css/furtive.min.css">
 </head>
 <body>
-  <h1>birds</h1>
-  <form method="post">
+  <div class="measure p2">
+    <h1>Birds</h1>
 
-    <div id="map"></div>
-    
-    <label>
-      lat min
-      <input name="lat_min" id="lat_min" value="51.75" size="5">
-    </label>
-    
-    <label>
-      lon min
-      <input name="lon_min" id="lon_min" value="1.25" size="5">
-    </label>
-    
-    <label>
-      lat max
-      <input name="lat_max" id="lat_max" value="52.75" size="5">
-    </label>
-    
-    <label>
-      lon max
-      <input name="lon_max" id="lon_max" value="2.25" size="5">
-    </label>
-
-    <input type="submit">
-  </form>
-
-  <ol id="results">
-  </ol>
-  <div id='container'></div>
-<!--
-
-cnt: "United Kingdom"
-en: "Common Moorhen"
-file: "http://www.xeno-canto.org/181390/download"
-gen: "Gallinula"
-id: "181390"
-lat: "51.8118"
-lic: "http://creativecommons.org/licenses/by-nc-sa/4.0/"
-lng: "-1.192"
-loc: "Cherwell (near  Oddington), Oxfordshire, England"
-q: "A"
-rec: "Dawid Jablonski"
-sp: "chloropus"
-ssp: ""
-type: "call"
-url: "http://www.xeno-canto.org/181390"
-
--->
-  <script id='template' type='text/ractive'>
-    <ol>
-      {{#recordings}}
-        <li>
-          <h1>{{this.en}} <small>{{this.gen}} {{this.sp}}</small></h1>
-          <h4>{{this.url}}</h4>
-          <button on-click="play">play</button>
-          <!--audio src="{{this.file}}"></audio-->
-        </li>
-      {{/recordings}}
-    </ol>
-  </script>
-
-
-   <script src='http://cdn.ractivejs.org/latest/ractive.js'></script>
-   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-   <style type="text/css"> </style>
-   <script type="text/javascript">
-    var map = L.map('map').setView([51.75, -1.25], 9);
-
-    // L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuamFtaW5iZW5iZW4iLCJhIjoiT3I1N1hMUSJ9.69a8Y_2A8x122liNhTQe-Q';
-    
-    L.tileLayer('http://api.tiles.mapbox.com/v4/benjaminbenben.fb16caf5/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYmVuamFtaW5iZW5iZW4iLCJhIjoiT3I1N1hMUSJ9.69a8Y_2A8x122liNhTQe-Q', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      maxZoom: 18
-    }).addTo(map);
-
-    function populate(){
-      var bounds = map.getBounds();
-      lat_min.value = bounds._southWest.lat;
-      lon_min.value = bounds._southWest.lng;
-      lat_max.value = bounds._northEast.lat;
-      lon_max.value = bounds._northEast.lng;
-    }
-
-    populate();
-    map.on('move', populate);
-
-    var markers = [];
-
-
-    var form = document.querySelector('form');
-    form.onsubmit = request;
-
-    function request(e){
-      e.preventDefault();
-      var formData = new FormData(form);
-
-      var req = new XMLHttpRequest();
-      req.open("POST", "/");
-      req.onload = function() {
-        if (req.status == 200) {
-          // 
-          // oOutput.innerHTML = "Uploaded!";
-
-          var response = JSON.parse(req.responseText);
-
-          var l = markers.length;
-          markers.forEach(function(m, i){
-            setTimeout(function(){
-              map.removeLayer(m);
-            }, i * (500 / l));
-          });
-
-          markers = [];
-
-          var r = response.recordings.length;
-          response.recordings.forEach(function(r, i){
-            var marker = L.marker([r.lat, r.lng])
-                          .bindPopup(r.en)
-                          .addTo(map);
-
-            markers.push(marker);
-          });
-
-          ractive.set( 'recordings', response.recordings )
-
-
-        } else {
-          console.log("Error " + req.status);
-        }
-      };
-      req.send(formData);
-    }
-
-
-
-    var ractive = new Ractive({
-      el: '#container',
-      template: '#template',
-      data: {
-        recordings: []
-      }
-    });
-
-    window.AudioContext = window.AudioContext||window.webkitAudioContext;
-    context = new AudioContext();
-    var buffers = {};
-
-    ractive.on( 'play', function ( event ) {
-      var file = event.context.file;
+    <h3>#1 Find recordings <small>(short is good)</small></h3>
+    <p>
+      <a href="map.html" class="btn btn--blue w100--s">
+        Map search
+      </a>
+      <a href="http://www.xeno-canto.org/search" class="btn btn--blue p2 w100--s">
+        Xeno-canto
+      </a>
+    </p>
       
-      file = file.replace('http://www.xeno-canto.org/', '/proxy/');
+    <h3>#2 Create a Flock</h3>
 
-      console.log( 'play', file );
+    <form method="post" action="/start">
+      
+      <p>format "ID description"</p>
+      <textarea name="birds" rows="5">
+XC181390 Moorhen (1s)
+XC180948 Yellowhammer (4s)
+XC178889 Water Rail (4s)
+XC99072 European Green Woodpecker (5s)</textarea>
 
-      if(typeof(buffers[file]) == 'undefined'){
-        buffers[file] = null;
-
-
-        var req = new XMLHttpRequest();
-        req.open('GET', file, true);
-        req.responseType = 'arraybuffer';
-
-        // Decode asynchronously
-        req.onload = function() {
-          context.decodeAudioData(req.response, function(buffer) {
-            buffers[file] = buffer;
-
-            play(buffer);
-          }, function(error){
-            console.error(error);
-          });
-        };
-        req.send();
-      }
-
-      if(buffers[file])
-        play(buffers[file]);
-    });
-
-
-    function play(buffer){
-      var source = context.createBufferSource(); // creates a sound source
-      source.buffer = buffer;                    // tell the source which sound to play
-      source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-      source.start(0);                           // play the source now
-    }
-  </script>
-
-
-   </script>
-
-
-
-
-  <hr />
+      <input type="submit" class="btn btn--green  w100--s" value="Create">
+    </form>
 
 
 </body>
