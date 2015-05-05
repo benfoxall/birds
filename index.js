@@ -29,6 +29,15 @@ app.get(/\/proxy\/(.*)/, function(req, res){
     .pipe(res);
 });
 
+
+app.post('/start', 
+  bodyParser.urlencoded({ extended: false }),
+  multipart(),
+  function (req, res) {
+    console.log(req.body);
+    res.send("TODO");
+  });
+
 var server = app.listen(process.env.PORT || 3000, function () {
   var host = server.address().address;
   var port = server.address().port;
