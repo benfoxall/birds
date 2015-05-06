@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var multipart = require('connect-multiparty');
 var express = require('express');
 var app = express();
+var HTMLing = require('htmling');
 
 var Redis = require('ioredis');
 var redis = new Redis(process.env.REDISTOGO_URL);
@@ -11,6 +12,13 @@ var redis = new Redis(process.env.REDISTOGO_URL);
 var week = 60*60*24*7;
 
 app.use(express.static('public'));
+
+
+
+app.engine('html', HTMLing.express(__dirname + '/views/',
+   {watch: process.env.NODE_ENV != 'production'})
+);
+app.set('view engine', 'html');
 
 app.post('/', 
   bodyParser.urlencoded({ extended: false }),
@@ -76,8 +84,7 @@ app.get('/flock/:id/:key', flockData, function(req, res){
   if(req.params.key !== req.key)
     return res.status(403).send('Forbidden');
 
-  res.send("<h1>YEAH:</h1>" + req.birds.join(' <br> '));
-
+  res.render('controller', req);
 })
 
 

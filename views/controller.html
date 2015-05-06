@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Birds</title>
+  <!-- http://furtive.co/ -->
+  <link rel="stylesheet" type="text/css" href="/bower/furtive/css/furtive.min.css">
+</head>
+<body>
+  <div class="measure p2">
+    <h1>Flock #{{params.id}}</h1>
+    <h3>public - /flock/{{params.id}}</h3>
+      <template repeat="{{bird in birds}}">
+        <h4>{{bird}}</h4>
+        <p><a href="#" class="btn btn--blue">▶</a></p>
+        <hr />
+      </template>
+  </div>
+
+</body>
+</html>
