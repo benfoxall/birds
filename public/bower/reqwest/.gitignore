@@ -1,0 +1,17 @@
+node_modules
+*.sublime-workspace
+
+
+.jshintrc
+.travis.yml
+Makefile
+README.md
+build.json
+make
+package.json
+phantom.js
+src
+test.js
+tests
+use-me.sublime-project
+vendor
