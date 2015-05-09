@@ -1,3 +1,5 @@
+require('dotenv').load();
+
 var request = require('request');
 var bodyParser = require('body-parser');
 var multipart = require('connect-multiparty');
