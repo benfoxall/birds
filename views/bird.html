@@ -10,7 +10,23 @@
     <h1>Flock #{{params.id}}</h1>
     <h3>public - /flock/{{params.id}}</h3>
 
-    <div id="pusher" data-channel="flock-{{params.id}}"></div>
+    <div
+      id="pusher"
+      data-channel="flock-{{params.id}}"
+      data-key="{{PUSHER_KEY}}"></div>
+
+    <script src="/bower/pusher/dist/pusher.min.js"></script>
+    <script>
+      var config = document.getElementById('pusher').dataset;
+
+      var pusher = new Pusher(config.key);
+      var channel = pusher.subscribe(config.channel);
+
+      channel.bind('test_event', function(data) {
+        document.getElementById('pusher').innerText = data.message;
+      });
+
+    </script>
   </div>
 </body>
 </html>

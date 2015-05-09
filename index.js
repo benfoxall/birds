@@ -94,6 +94,7 @@ app.post('/start',
 
 app.get('/flock/:id', flock,
   function(req, res){
+    req.PUSHER_KEY = process.env.PUSHER_KEY;
     res.render('bird', req);
 })
 
@@ -107,9 +108,11 @@ app.post('/flock/:id/:key', flock, flockAuth,
   bodyParser.urlencoded({ extended: false }),
   multipart(), function(req, res){
 
-    pusher.trigger('flock-' + req.key, 'test_event', { message: "hello world" });
+    pusher.trigger('flock-' + req.params.id, 'test_event', {
+      message: "test " + Date.now()
+    });
 
-    res.send("done");
+    res.send("ok");
 })
 
 function flock(req, res, next){
