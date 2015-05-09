@@ -26,6 +26,51 @@
         document.getElementById('pusher').innerText = data.message;
       });
 
+      channel.bind('bird', function(data) {
+        playBird(data.id);
+      });
+
+      // player
+      window.AudioContext = window.AudioContext||window.webkitAudioContext;
+      context = new AudioContext();
+      var buffers = {};
+
+      var buffers = {};
+      function playBird(xc_id){
+
+        var url = '/proxy/'+xc_id+'/download';
+
+        if(typeof(buffers[url]) == 'undefined'){
+          buffers[url] = null;
+
+          var req = new XMLHttpRequest();
+          req.open('GET', url, true);
+          req.responseType = 'arraybuffer';
+
+          // Decode asynchronously
+          req.onload = function() {
+            context.decodeAudioData(req.response, function(buffer) {
+              buffers[url] = buffer;
+
+              play(buffer);
+            }, function(error){
+              console.error(error);
+            });
+          };
+          req.send();
+        }
+
+        if(buffers[url])
+          play(buffers[url]);
+      };
+
+      function play(buffer){
+        var source = context.createBufferSource(); // creates a sound source
+        source.buffer = buffer;                    // tell the source which sound to play
+        source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+        source.start(0);                           // play the source now
+      }
+
     </script>
   </div>
 </body>

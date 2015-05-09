@@ -7,9 +7,7 @@
 </head>
 <body>
   <div class="measure p2">
-    <h1>Flock #{{params.id}}</h1>
-
-    <h3>public - /flock/{{params.id}}</h3>
+    <h1>▶ /flock/{{params.id}}</h3>
 
     <form method="post">
       <div class="grd">
@@ -24,6 +22,8 @@
         </div>
       </div>
     </form>
+
+    <h4>examples</h4>
 
     <template repeat="{{bird in birds}}">
       <h4>{{bird}}</h4>

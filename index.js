@@ -110,6 +110,14 @@ app.get('/flock/:id/:key', flock, flockAuth,
 app.post('/flock/:id/:key', flock, flockAuth,
   bodyParser.urlencoded({ extended: false }),
   multipart(), function(req, res){
+    if(req.body.bird){
+      pusher.trigger(channelPrefix + req.params.id, 'bird', {
+        id: req.body.bird.replace('XC','')
+      });
+
+      return res.send('ok');
+    }
+    console.log(req.body)
 
     pusher.trigger(channelPrefix + req.params.id, 'test_event', {
       message: "test " + Date.now()
