@@ -30,6 +30,7 @@
     "express": "^4.12.3",
     "htmling": "0.0.7",
     "ioredis": "^1.2.0",
+    "pusher": "^1.0.4",
     "request": "^2.55.0"
   }
 }

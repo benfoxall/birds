@@ -8,13 +8,29 @@
 <body>
   <div class="measure p2">
     <h1>Flock #{{params.id}}</h1>
-    <h3>public - /flock/{{params.id}}</h3>
-      <template repeat="{{bird in birds}}">
-        <h4>{{bird}}</h4>
-        <p><a href="#" class="btn btn--blue">▶</a></p>
-        <hr />
-      </template>
-  </div>
 
+    <h3>public - /flock/{{params.id}}</h3>
+
+    <form method="post">
+      <div class="grd">
+        <div class="grd-row">
+          <div class="grd-row-col-2-6">
+
+            <label>bird
+              <input name="bird">
+            </label>
+
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <template repeat="{{bird in birds}}">
+      <h4>{{bird}}</h4>
+      <p><a href="#" class="btn btn--blue">▶</a></p>
+      <hr />
+    </template>
+
+  </div>
 </body>
 </html>

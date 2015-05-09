@@ -7,6 +7,15 @@ var express = require('express');
 var app = express();
 var HTMLing = require('htmling');
 
+var Pusher = require('pusher');
+ 
+var pusher = new Pusher({
+  appId:  process.env.PUSHER_APP,
+  key:    process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET
+});
+
+
 var Redis = require('ioredis');
 var redis = new Redis(process.env.REDISTOGO_URL);
 
@@ -81,16 +90,29 @@ app.post('/start',
     });
   });
 
-app.get('/flock/:id/:key', flockData, function(req, res){
 
-  if(req.params.key !== req.key)
-    return res.status(403).send('Forbidden');
 
-  res.render('controller', req);
+app.get('/flock/:id', flock,
+  function(req, res){
+    res.render('bird', req);
+})
+
+app.get('/flock/:id/:key', flock, flockAuth,
+  function(req, res){
+    res.render('controller', req);
 })
 
 
-function flockData(req, res, next){
+app.post('/flock/:id/:key', flock, flockAuth,
+  bodyParser.urlencoded({ extended: false }),
+  multipart(), function(req, res){
+
+    pusher.trigger('flock-' + req.key, 'test_event', { message: "hello world" });
+
+    res.send("done");
+})
+
+function flock(req, res, next){
   var id = req.params.id;
   redis
     .multi()
@@ -103,6 +125,12 @@ function flockData(req, res, next){
       next();
     }, next)
 }
+
+function flockAuth (req, res, next){
+  if(req.params.key !== req.key)
+    return res.status(403).send('Forbidden');
+  next();
+};
 
 var server = app.listen(process.env.PORT || 3000, function () {
   var host = server.address().address;
