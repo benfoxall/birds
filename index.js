@@ -15,6 +15,8 @@ var pusher = new Pusher({
   secret: process.env.PUSHER_SECRET
 });
 
+var channelPrefix = ['bbbirds', process.env.CHANNEL_PREFIX].join('-')
+
 
 var Redis = require('ioredis');
 var redis = new Redis(process.env.REDISTOGO_URL);
@@ -95,6 +97,7 @@ app.post('/start',
 app.get('/flock/:id', flock,
   function(req, res){
     req.PUSHER_KEY = process.env.PUSHER_KEY;
+    req.CHANNEL = channelPrefix + req.params.id;
     res.render('bird', req);
 })
 
@@ -108,7 +111,7 @@ app.post('/flock/:id/:key', flock, flockAuth,
   bodyParser.urlencoded({ extended: false }),
   multipart(), function(req, res){
 
-    pusher.trigger('flock-' + req.params.id, 'test_event', {
+    pusher.trigger(channelPrefix + req.params.id, 'test_event', {
       message: "test " + Date.now()
     });
 
