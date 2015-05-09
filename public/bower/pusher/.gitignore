@@ -1,0 +1,43 @@
+/config/config.yml
+.rvmrc
+.bundle
+*.DS_Store
+*.swp
+dist/*
+!/dist/*.js
+!/dist/*.swf
+
+
+# manually added post bower install
+CHANGELOG.markdown
+Gemfile
+Gemfile.lock
+Guardfile
+JFile
+LICENCE
+Makefile
+README.markdown
+Rakefile
+bin
+bower.json
+config
+demos
+jshint-config.json
+lib
+spec
+src
+
+dist/WebSocketMain.swf
+dist/flashfallback.js
+dist/flashfallback.min.js
+dist/json2.js
+dist/json2.min.js
+dist/sockjs.js
+dist/sockjs.min.js
+dist/xdr.js
+dist/xdr.min.js
+dist/xhr.js
+dist/xhr.min.js
+
+# dist/pusher.js
+# dist/pusher.min.js
