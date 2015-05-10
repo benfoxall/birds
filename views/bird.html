@@ -26,6 +26,52 @@
         document.getElementById('pusher').innerText = data.message;
       });
 
+      // generate a time offset within a poisson distribution
+      // http://preshing.com/20111007/how-to-generate-random-timings-for-a-poisson-process/
+      function nextTime(rate) {
+        return -Math.log(1 - Math.random()) / rate;
+      }
+
+      function schedule(track, f, until){
+        var next = nextTime(1/f) * 1000;
+        console.log("scheduling in " + next + " millis");
+
+        if(next + Date.now() < until) {
+          setTimeout(function(){
+            play(track);
+            schedule(track, f, until);
+          }, next);
+        }
+      }
+
+      function play(track){
+        if(track.type == 'bird'){
+          playBird(track.data);
+        } else {
+          console.log("track type '%s' not supported", track.type)
+        }
+      }
+
+      channel.bind('play', function(data) {
+
+        // default to 15 second max duration
+        var until = Date.now() + 15000;
+
+        data.tracks.forEach(function(track) {
+          
+          var f = parseInt(track.frequency, 10);
+          if(f){
+            schedule(track, f, until);
+          } else {
+            play(track);
+          }
+
+        })
+
+        // playBird(data.id);
+      });
+
+
       channel.bind('bird', function(data) {
         playBird(data.id);
       });
@@ -33,10 +79,10 @@
       // player
       window.AudioContext = window.AudioContext||window.webkitAudioContext;
       context = new AudioContext();
-      var buffers = {};
 
       var buffers = {};
       function playBird(xc_id){
+        xc_id = xc_id.replace('XC','');
 
         var url = '/proxy/'+xc_id+'/download';
 
@@ -52,7 +98,7 @@
             context.decodeAudioData(req.response, function(buffer) {
               buffers[url] = buffer;
 
-              play(buffer);
+              playBuffer(buffer);
             }, function(error){
               console.error(error);
             });
@@ -61,15 +107,16 @@
         }
 
         if(buffers[url])
-          play(buffers[url]);
+          playBuffer(buffers[url]);
+
+        function playBuffer(buffer){
+          var source = context.createBufferSource(); // creates a sound source
+          source.buffer = buffer;                    // tell the source which sound to play
+          source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+          source.start(0);                           // play the source now
+        }
       };
 
-      function play(buffer){
-        var source = context.createBufferSource(); // creates a sound source
-        source.buffer = buffer;                    // tell the source which sound to play
-        source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-        source.start(0);                           // play the source now
-      }
 
     </script>
   </div>

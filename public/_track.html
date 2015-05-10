@@ -1,1 +1,46 @@
-_track.html
+
+{{#tracks}}
+<div class="p2">
+  <label>
+    type
+    <select value='{{this.type}}'>
+      <option>bird</option>
+      <!--option>url</option-->
+      <option>synth</option>
+    </select>
+  </label>
+  <br />
+
+  <label>
+    data
+    <input type="text" value='{{this.data}}'>
+  </label>
+
+  <label>
+    offset (s)
+    <input type="text" value='{{this.offset}}'>
+  </label>
+
+
+  <label>
+    frequency (s)
+    <input type="text" value='{{this.frequency}}'>
+  </label>
+
+  <!--label>
+    custom start
+    <input type="text">
+  </label-->
+
+</div>
+{{/tracks}}
+
+<div class="p2">
+
+<span class="btn btn--blue" on-click="add-track">add track</span>
+
+<span class="btn btn--blue" on-click="submit">play</span>
+
+</div>
+
+

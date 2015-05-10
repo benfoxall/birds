@@ -108,8 +108,8 @@ app.get('/flock/:id/:key', flock, flockAuth,
 
 
 app.post('/flock/:id/:key', flock, flockAuth,
-  bodyParser.urlencoded({ extended: false }),
-  multipart(), function(req, res){
+  bodyParser.urlencoded(),
+  function(req, res){
     if(req.body.bird){
       pusher.trigger(channelPrefix + req.params.id, 'bird', {
         id: req.body.bird.replace('XC','')
@@ -119,9 +119,7 @@ app.post('/flock/:id/:key', flock, flockAuth,
     }
     console.log(req.body)
 
-    pusher.trigger(channelPrefix + req.params.id, 'test_event', {
-      message: "test " + Date.now()
-    });
+    pusher.trigger(channelPrefix + req.params.id, 'play', req.body);
 
     res.send("ok");
 })
