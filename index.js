@@ -61,11 +61,6 @@ app.post('/start',
   multipart(),
   function (req, res, next) {
 
-    console.log(req.body);
-
-    var birds = req.body.birds.split(/\r?\n/);
-    if(!birds.length) return next();
-
     // get the next url
     redis.incr('url_base', function (err, i) {
 
@@ -73,17 +68,11 @@ app.post('/start',
 
       var key = (Math.random()).toString(36).slice(2);
 
-      // set all the data and redirect
-      // to manage page
+      // set key and redirect to manage page
       redis
         .multi()
-
         .set('pub-key-' + i, key)
-        .sadd('birds-' + i, birds)
-
         .expire('pub-key-' + i, week)
-        .expire('birds-' + i, week)
-
         .exec(function(err){
           if(err) return next(err);
           var url = '/flock/' + i + '/' + key;
@@ -110,13 +99,6 @@ app.get('/flock/:id/:key', flock, flockAuth,
 app.post('/flock/:id/:key', flock, flockAuth,
   bodyParser.urlencoded(),
   function(req, res){
-    if(req.body.bird){
-      pusher.trigger(channelPrefix + req.params.id, 'bird', {
-        id: req.body.bird.replace('XC','')
-      });
-
-      return res.send('ok');
-    }
     console.log(req.body)
 
     pusher.trigger(channelPrefix + req.params.id, 'play', req.body);
@@ -127,13 +109,9 @@ app.post('/flock/:id/:key', flock, flockAuth,
 function flock(req, res, next){
   var id = req.params.id;
   redis
-    .multi()
     .get('pub-key-' + id)
-    .smembers('birds-' + id)
-    .exec()
     .then(function(results){
-      req.key   = results[0][1];
-      req.birds = results[1][1];
+      req.key  = results;
       next();
     }, next)
 }
