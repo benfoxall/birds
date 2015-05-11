@@ -44,6 +44,17 @@
           })
         })
 
+
+        ractive.on('stop', function(){
+          reqwest({
+            url: document.location.pathname,
+            method:'post', 
+            data: {
+              tracks: []
+            }
+          })
+        })
+
       })
 
     </script>

@@ -25,6 +25,8 @@
       var channel = pusher.subscribe(config.channel);
 
 
+      var scheduled = [];
+
 
       // generate a time offset within a poisson distribution
       // http://preshing.com/20111007/how-to-generate-random-timings-for-a-poisson-process/
@@ -37,10 +39,10 @@
         console.log("scheduling in " + next + " millis");
 
         if(next + Date.now() < until) {
-          setTimeout(function(){
+          scheduled.push(setTimeout(function(){
             play(track);
             schedule(track, f, until);
-          }, next);
+          }, next));
         }
       }
 
@@ -65,10 +67,14 @@
 
       channel.bind('play', function(data) {
 
+        while(scheduled.length){
+          clearTimeout(scheduled.pop());
+        }
+
         // default to 15 second max duration
         var until = Date.now() + 15000;
 
-        data.tracks.forEach(function(track) {
+        (data.tracks||[]).forEach(function(track) {
           
           var f = parseInt(track.frequency, 10);
           if(f){
@@ -81,13 +87,8 @@
       });
 
 
-      channel.bind('bird', function(data) {
-        playBird(data.id);
-      });
 
-
-
-
+      // web audio stuff
 
 
       var context = new AudioContext();
