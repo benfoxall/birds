@@ -66,6 +66,7 @@
       }
 
       channel.bind('play', function(data) {
+        if(data.reload) {window.location.reload()}
 
         while(scheduled.length){
           clearTimeout(scheduled.pop());

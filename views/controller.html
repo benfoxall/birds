@@ -16,6 +16,7 @@
 
     <script type="text/javascript">
 
+      var storeKey = location.pathname;
       var ractive;
 
       reqwest('/_track.html')
@@ -27,6 +28,9 @@
             tracks: [{type: "bird", data: "XC99072", offset: "0", frequency: "15"}]
           }
         });
+
+        var stored = localStorage.getItem(storeKey);
+        if(stored) try{ractive.set('tracks', JSON.parse(stored))} catch(e){}
 
         ractive.on('add-track', function(){
           ractive.push('tracks', {})
@@ -42,6 +46,8 @@
               tracks: tracks
             }
           })
+
+          localStorage.setItem(storeKey, JSON.stringify(tracks));
         })
 
 
@@ -55,7 +61,18 @@
           })
         })
 
+        ractive.on('reload', function(){
+          reqwest({
+            url: document.location.pathname,
+            method:'post', 
+            data: {
+              reload:true
+            }
+          })
+        })
+
       })
+
 
     </script>
 
