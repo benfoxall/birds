@@ -69,12 +69,11 @@
     var OriginalAudioContext = AudioContext;
     window.AudioContext = function AudioContext() {
       var iOSCtx = new OriginalAudioContext();
-		
-      var body = document.body;
+
       var tmpBuf = iOSCtx.createBufferSource();
       var tmpProc = iOSCtx.createScriptProcessor(256, 1, 1);
 
-      body.addEventListener('touchstart', instantProcess, false);
+      document.addEventListener('touchstart', instantProcess, false);
 
       function instantProcess() {
         tmpBuf.start(0);
@@ -86,7 +85,7 @@
       tmpProc.onaudioprocess = function() {
         tmpBuf.disconnect();
         tmpProc.disconnect();
-        body.removeEventListener('touchstart', instantProcess, false);
+        document.removeEventListener('touchstart', instantProcess, false);
         tmpProc.onaudioprocess = null;
       };
 		
