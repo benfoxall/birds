@@ -1,61 +1,76 @@
 
 {{#tracks}}
-<div class="p2">
-  <label>
-    type
-    <select value='{{this.type}}'>
-      <option>bird</option>
-      <!--option>url</option-->
-      <option>synth</option>
-    </select>
-  </label>
-  <br />
-
-  <!--label>
-    key
-    <input type="text" value='{{this.key}}'>
-  </label-->
-
-  <label>
-    data
-    <input type="text" value='{{this.data}}'>
-  </label>
-
-  <label>
-    offset (s)
-    <input type="text" value='{{this.offset}}'>
-  </label>
 
 
-  <label>
-    frequency (s)
-    <input type="text" value='{{this.frequency}}'>
-  </label>
+<div class="grd">
+  <div class="grd-row">
+    <div class="grd-row-col-2-6 p1">
+      <label>
+        Sound Type
+        <select value='{{this.src}}'>
+          <option>bird</option>
+          <!--option>url</option-->
+          <option>synth</option>
+        </select>
+      </label>
 
-  <!--label>
-    custom start
-    <input type="text">
-  </label-->
+      <label>
+        Data
+        <input type="text" value='{{this.src_value}}'>
+      </label>
+    </div>
 
+    <div class="grd-row-col-2-6 p1">
+      
+      <label>
+        Timing
+        <select value='{{this.timing}}'>
+          <option>offset</option>
+          <option>rate</option>
+        </select>
+      </label>
+
+
+      <label>
+        Seconds
+        <input type="text" value='{{this.timing_value}}'>
+      </label>
+    </div>
+
+
+    <div class="grd-row-col-2-6 p1">
+      <a href="#" on-click="remove-track"> &times; remove </a>
+    </div>
+  </div>
 </div>
+
 {{/tracks}}
 
 <div class="p2">
 
-<span class="btn btn--blue" on-click="add-track">add track</span>
+  <span class="btn btn--blue" on-click="add-track">add track</span>
 
-<span class="btn btn--blue" on-click="submit">play</span>
+  <span class="btn btn--blue" on-click="submit">play</span>
 
-<span class="btn btn--blue" on-click="stop">stop</span>
+  <span class="btn btn--blue" on-click="stop">stop</span>
 
 </div>
 
 <div class="p2">
 
-<span class="btn btn--blue" on-click="reload">reload clients</span>
-
-
+  <span class="btn btn--blue" on-click="reload">reload clients</span>
 
 </div>
 
+
+<div class="p2">
+  <h4>examples</h4>
+  <ul>
+    <li>XC181390 Moorhen (1s)</li>
+    <li>XC180948 Yellowhammer (4s)</li>
+    <li>XC178889 Water Rail (4s)</li>
+    <li>XC99072 European Green Woodpecker (5s)</li>
+    <li>XC600 Some kind of bird</li>
+  </ul>
+</div>
 

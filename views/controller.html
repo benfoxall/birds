@@ -4,6 +4,12 @@
   <title>Birds</title>
   <!-- http://furtive.co/ -->
   <link rel="stylesheet" type="text/css" href="/bower/furtive/css/furtive.min.css">
+  <style type="text/css">
+    label, input, select{
+      display:block;
+    }
+    label{margin-bottom: 1em;}
+  </style>
 </head>
 <body>
   <div class="measure p2">
@@ -34,6 +40,10 @@
 
         ractive.on('add-track', function(){
           ractive.push('tracks', {})
+        })
+
+        ractive.on('remove-track', function(x){
+          ractive.splice('tracks', ractive.get('tracks').indexOf(x.context), 1)
         })
 
         ractive.on('submit', function(){

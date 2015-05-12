@@ -46,15 +46,27 @@
         }
       }
 
+
+      function offset(track, d, until){
+        var next = d * 1000;
+        console.log("scheduling in " + next + " millis");
+
+        if(next + Date.now() < until) {
+          scheduled.push(setTimeout(function(){
+            play(track);
+          }, next));
+        }
+      }
+
       function play(track){
-        switch(track.type){
+        switch(track.src){
 
           case 'bird':
-            playBird(track.data);
+            playBird(track.src_value);
             break;
 
           case 'synth':
-            var args = track.data.split(' ').map(parseFloat);
+            var args = track.src_value.split(' ').map(parseFloat);
             note.apply(null, args);
             break;
 
@@ -76,12 +88,23 @@
         var until = Date.now() + 15000;
 
         (data.tracks||[]).forEach(function(track) {
-          
-          var f = parseInt(track.frequency, 10);
-          if(f){
-            schedule(track, f, until);
-          } else {
-            play(track);
+
+          var t = parseFloat(track.timing_value);
+
+          switch(track.timing){
+
+            case 'offset':
+              offset(track, t, until);
+              break;
+
+            case 'rate':
+              schedule(track, t, until);
+              break;
+
+            default:
+              console.log(track);
+              console.log("timing type '%s' not supported", track.timing)
+
           }
 
         });
